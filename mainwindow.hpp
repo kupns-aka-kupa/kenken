@@ -4,9 +4,11 @@
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QStandardPaths>
+#include <QGraphicsScene>
 #include <QDebug>
 
 #include "parser.hpp"
+#include "kenkengraphicsrectitem.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -25,6 +27,7 @@ private slots:
 
 private:
     Ui::MainWindow *_ui;
+    QGraphicsScene *_scene;
     Parser *_parser;
 };
 #endif // MAINWINDOW_HPP
