@@ -8,6 +8,7 @@
 #include <QDebug>
 
 #include "parser.hpp"
+#include "solver.hpp"
 #include "kenkengraphicsrectitem.hpp"
 
 QT_BEGIN_NAMESPACE
@@ -24,10 +25,12 @@ public:
 
 private slots:
     void on_loadPushButton_clicked();
+    void on_solvePushButton_clicked();
 
 private:
     Ui::MainWindow *_ui;
     QGraphicsScene *_scene;
     Parser *_parser;
+    Solver *_solver;
 };
 #endif // MAINWINDOW_HPP

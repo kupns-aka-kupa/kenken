@@ -3,9 +3,10 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , _parser(new Parser(this))
-    , _scene(new QGraphicsScene(this))
     , _ui(new Ui::MainWindow)
+    , _scene(new QGraphicsScene(this))
+    , _parser(new Parser(this))
+    , _solver(new Solver(this))
 {
     _ui->setupUi(this);
 
@@ -25,10 +26,15 @@ void MainWindow::on_loadPushButton_clicked()
 
     auto name = QFileDialog::getOpenFileName(this, "Select file", DATA_DIR);
     QFile file(name);
-    auto blocks = _parser->parse(file);
+    _parser->parse(file);
 
-    foreach(auto block, blocks)
+    foreach(auto block, _parser->Blocks)
     {
         _scene->addItem(new KenkenGraphicsRectItem(block));
     }
+}
+
+void MainWindow::on_solvePushButton_clicked()
+{
+    _solver->solve(_parser);
 }

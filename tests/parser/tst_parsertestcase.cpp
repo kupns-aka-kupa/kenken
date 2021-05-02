@@ -59,7 +59,7 @@ void ParserTestCase::validTestCase()
 
     while (stream.readLineInto(&line))
     {
-        qDebug() << _parser->parseLine(line);
+        _parser->parseLine(line);
     }
 
 }

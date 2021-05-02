@@ -10,17 +10,17 @@ Parser::Parser(QObject *parent)
     };
 }
 
-QVector<Block> Parser::parse(QFile &file)
+void Parser::parse(QFile &file)
 {
+    Blocks.clear();
+
     if (!file.open(QIODevice::ReadOnly)) throw ParserException();
-    QVector<Block> result;
 
     while (!file.atEnd())
     {
         auto line = QString(file.readLine()).simplified();
-        result.push_back(parseLine(line));
+        Blocks.push_back(parseLine(line));
     }
-    return result;
 }
 
 Block Parser::parseLine(QString &line)
@@ -48,10 +48,9 @@ Block Parser::parseLine(QString &line)
         indexes.push_back({i.front(), i.back()});
     }
 
-    auto constraint = statements.back();
-    char operation = constraint.right(1).front().toLatin1();
-    constraint.truncate(constraint.lastIndexOf(operation));
+    auto s = statements.back();
+    auto op = s.back();
 
-    return Block(indexes, operation, constraint.toInt());
+    if(op.isDigit()) return Block(indexes, '\0', s.toInt());
+    else return Block(indexes, op.toLatin1(), s.left(s.length() - 1).toInt());
 }
-

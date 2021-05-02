@@ -30,6 +30,7 @@ struct Block
     char Op;
     int Total;
 
+    Block() = default;
     explicit Block(const QVector<QPoint> &indexes, char op, int total)
     {
         Indexes = indexes;
@@ -44,10 +45,13 @@ class Parser : public QObject
 
 public:
     explicit Parser(QObject *parent = nullptr);
+    ~Parser() = default;
 
-    QVector<Block> parse(QFile &);
+    void parse(QFile &);
     Block parseLine(QString &);
 
+public:
+    QVector<Block> Blocks;
 signals:
 private:
     ParserOptions _options;
