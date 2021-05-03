@@ -49,10 +49,10 @@ public:
 
     void parse(QFile &);
     Block parseLine(QString &);
+    int size();
 
 public:
     QVector<Block> Blocks;
-signals:
 private:
     ParserOptions _options;
 

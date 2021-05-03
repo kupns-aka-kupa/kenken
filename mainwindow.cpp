@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     , _ui(new Ui::MainWindow)
     , _scene(new QGraphicsScene(this))
     , _parser(new Parser(this))
-    , _solver(new Solver(this))
+    , _solver(new Solver(_parser))
 {
     _ui->setupUi(this);
 
@@ -36,5 +36,5 @@ void MainWindow::on_loadPushButton_clicked()
 
 void MainWindow::on_solvePushButton_clicked()
 {
-    _solver->solve(_parser);
+    _solver->solve();
 }

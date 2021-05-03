@@ -54,3 +54,18 @@ Block Parser::parseLine(QString &line)
     if(op.isDigit()) return Block(indexes, '\0', s.toInt());
     else return Block(indexes, op.toLatin1(), s.left(s.length() - 1).toInt());
 }
+
+int Parser::size()
+{
+    QSet<int> i;
+
+    foreach(auto block, Blocks)
+    {
+        foreach(auto index, block.Indexes)
+        {
+            i.insert(std::max(index.x(), index.y()));
+        }
+    }
+
+    return *std::max_element(i.begin(), i.end());
+}

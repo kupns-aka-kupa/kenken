@@ -9,8 +9,8 @@ class Solver : public QObject
 {
     Q_OBJECT
 public:
-    explicit Solver(QObject *parent = nullptr);
-    QVector<QPair<QPoint, int>> solve(Parser *);
+    explicit Solver(Parser *parent = nullptr);
+    QVector<QPair<QPoint, int>> solve();
 
 signals:
 
