@@ -3,13 +3,26 @@
 
 #include <QObject>
 
+#include <functional>
+
 #include "parser.hpp"
 
 class Solver : public QObject
 {
     Q_OBJECT
+
+    const QMap<char, std::function<int(int, int)>> Ops =
+    {
+        {'+', std::plus()},
+        {'-', std::minus()},
+        {'/', std::divides()},
+        {'*', std::multiplies()},
+    };
+
 public:
     explicit Solver(Parser *parent = nullptr);
+    ~Solver() = default;
+
     QVector<QPair<QPoint, int>> solve();
 
 signals:
