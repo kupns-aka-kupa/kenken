@@ -24,14 +24,27 @@ void MainWindow::on_loadPushButton_clicked()
 {
     _scene->clear();
 
-    auto name = QFileDialog::getOpenFileName(this, "Select file", DATA_DIR);
-    QFile file(name);
+#ifndef QT_DEBUG
+    QDir dir(DATA_DIR);
+    auto name = QFileDialog::getOpenFileName(this, "Select file", dir.path());
+#else
+    QDir dir(":valid");
+    auto name = dir.entryList().first();
+#endif
+
+    QFileInfo info(dir, name);
+
+    QFile file(info.filePath());
     _parser->parse(file);
 
     foreach(auto block, _parser->Blocks)
     {
         _scene->addItem(new KenkenGraphicsRectItem(block));
     }
+
+#ifdef QT_DEBUG
+    _solver->solve();
+#endif
 }
 
 void MainWindow::on_solvePushButton_clicked()

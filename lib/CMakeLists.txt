@@ -15,6 +15,8 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
 file(GLOB SOURCE_FILES ${PROJECT_SOURCE_DIR}/*.cpp)
 file(GLOB HEADER_FILES ${PROJECT_SOURCE_DIR}/*.hpp)
 
+include_directories(${cppitertools_SOURCE_DIR})
+
 set(PROJECT_SOURCES
     ${SOURCE_FILES}
     ${HEADER_FILES})

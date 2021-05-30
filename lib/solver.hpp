@@ -5,6 +5,8 @@
 
 #include <functional>
 
+#include <combinations.hpp>
+
 #include "parser.hpp"
 
 class Solver : public QObject

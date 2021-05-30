@@ -12,6 +12,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/tests)
+add_subdirectory(${PROJECT_SOURCE_DIR}/itertools)
 add_subdirectory(${PROJECT_SOURCE_DIR}/lib)
 add_subdirectory(${PROJECT_SOURCE_DIR}/data)
 
@@ -36,5 +37,9 @@ else()
     add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
 endif()
 
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets TestData Internal)
-target_compile_definitions(${PROJECT_NAME} PRIVATE DATA_DIR="${PROJECT_SOURCE_DIR}/data")
+target_link_libraries(${PROJECT_NAME} PRIVATE
+        Qt${QT_VERSION_MAJOR}::Widgets
+        TestData
+        cppitertools
+        Internal)
+target_compile_definitions(${PROJECT_NAME} PRIVATE DATA_DIR="${TestData_SOURCE_DIR}")
