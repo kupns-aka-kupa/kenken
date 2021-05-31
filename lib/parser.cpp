@@ -29,30 +29,38 @@ Block Parser::parseLine(QString &line)
     auto statements = line.split(separator);
     statements.removeAll("");
 
+    auto s = statements.back();
+    auto op = s.back();
+
+    statements.removeLast();
+    auto indexes = parseIndexes(statements);
+
+    if(op.isDigit()) return Block(indexes, '\0', s.toInt());
+    else return Block(indexes, op.toLatin1(), s.leftRef(s.length() - 1).toInt());
+}
+
+QVector<QPoint> Parser::parseIndexes(const QStringList &statements) const
+{
     QVector<QPoint> indexes;
 
-    foreach(auto item, QStringList(statements.begin(), statements.end() - 1))
+    foreach(auto item, statements)
     {
         auto separated = item.split(_options.IndexSeparator);
         QVector<int> i;
 
         bool ok;
         std::transform(separated.begin(), separated.end(), std::back_inserter(i),
-        [&](const QString& s) -> int
-        {
-            int r = s.toInt(&ok);
-            if(!ok) throw ParserException();
-            return r;
-        });
+                       [&](const QString& s) -> int
+                       {
+                           int r = s.toInt(&ok);
+                           if(!ok) throw ParserException();
+                           return r;
+                       });
 
         indexes.push_back({i.front(), i.back()});
     }
 
-    auto s = statements.back();
-    auto op = s.back();
-
-    if(op.isDigit()) return Block(indexes, '\0', s.toInt());
-    else return Block(indexes, op.toLatin1(), s.left(s.length() - 1).toInt());
+    return std::move(indexes);
 }
 
 int Parser::size()

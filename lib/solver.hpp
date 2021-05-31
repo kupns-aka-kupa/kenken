@@ -9,6 +9,16 @@
 
 #include "parser.hpp"
 
+struct Solves
+{
+    QSet<int> Combinations;
+
+    explicit Solves(QSet<int> &&c)
+    {
+        Combinations = c;
+    }
+};
+
 class Solver : public QObject
 {
     Q_OBJECT
@@ -27,7 +37,8 @@ public:
 
     QVector<QPair<QPoint, int>> solve();
 
-signals:
+private:
+    QSet<int> variantsPerBlock(const QVector<int> &range, const Block &b);
 
 };
 

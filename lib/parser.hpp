@@ -51,6 +51,9 @@ public:
     Block parseLine(QString &);
     int size();
 
+private:
+     Q_REQUIRED_RESULT QVector<QPoint> parseIndexes(const QStringList &statements) const;
+
 public:
     QVector<Block> Blocks;
 private:
