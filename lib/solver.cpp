@@ -14,6 +14,23 @@ QVector<QPair<QPoint, int>> Solver::solve()
         qDebug() << variantsPerBlock(range, b);
     }
 
+    foreach(auto b, p->Blocks)
+    {
+        auto it = std::partition(p->Blocks.begin(), p->Blocks.end(),
+                                 [&](const Block &o)
+                                 {
+                                     return false;
+//                                     return !b.Indexes.intersect(o.Indexes).empty();
+                                 });
+
+        std::vector<Block> cont(std::begin(p->Blocks), it);
+
+        for (const auto& block : cont)
+        {
+            qDebug() << block.Total << block.Op;
+
+        }
+    }
 
     return QVector<QPair<QPoint, int>> ();
 }
