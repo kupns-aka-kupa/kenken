@@ -10,6 +10,15 @@ Parser::Parser(QObject *parent)
     };
 }
 
+QDebug operator<<(QDebug dbg, const Block &block)
+{
+    if (block.Indexes.isEmpty())
+        dbg.nospace() << "Block() ";
+    else
+        dbg.nospace() << "Block(" << block.Indexes << ") ";
+    return dbg.maybeSpace();
+}
+
 void Parser::parse(QFile &file)
 {
     Blocks.clear();

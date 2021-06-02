@@ -25,7 +25,7 @@ struct ParserOptions
 };
 
 struct Block
-{
+        {
     QVector<QPoint> Indexes;
     char Op;
     int Total;
@@ -37,11 +37,13 @@ struct Block
         Op = op;
         Total = total;
     }
+
+    friend QDebug operator<<(QDebug dbg, const Block &block);
 };
 
 class Parser : public QObject
 {
-    Q_OBJECT
+Q_OBJECT
 
 public:
     explicit Parser(QObject *parent = nullptr);

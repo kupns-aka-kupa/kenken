@@ -1,4 +1,3 @@
-#include <iostream>
 #include "solver.hpp"
 
 Solver::Solver(Parser *parent) : QObject(parent) { }
@@ -6,33 +5,64 @@ Solver::Solver(Parser *parent) : QObject(parent) { }
 QVector<QPair<QPoint, int>> Solver::solve()
 {
     auto p = dynamic_cast<Parser *>(parent());
+
+    QMultiHash<QPoint, Block> groups;
+
     QVector<int> range(p->size());
     std::iota(range.begin(), range.end(), 1);
 
-    foreach(auto b, p->Blocks)
+    foreach(auto block, p->Blocks)
     {
-        qDebug() << variantsPerBlock(range, b);
+        auto variants = variantsPerBlock(range, block);
+
+        Q_UNUSED(variants)
+
+        foreach(const auto &index, block.Indexes)
+        foreach(const auto &point, cross(range, index))
+        groups.insert(point, block);
     }
 
-    foreach(auto b, p->Blocks)
+
+    for (const auto&& [x, y] : iter::product<2>(range))
     {
-        auto it = std::partition(p->Blocks.begin(), p->Blocks.end(),
-                                 [&](const Block &o)
-                                 {
-                                     return false;
-//                                     return !b.Indexes.intersect(o.Indexes).empty();
-                                 });
+        QPoint point{x, y};
+        auto values = groups.values(point);
 
-        std::vector<Block> cont(std::begin(p->Blocks), it);
+        qDebug() << point << values.size();
 
-        for (const auto& block : cont)
-        {
-            qDebug() << block.Total << block.Op;
+        foreach(auto value, values)
+            qDebug() << value;
 
-        }
     }
 
     return QVector<QPair<QPoint, int>> ();
+}
+
+QSet<QPoint> Solver::cross(const QVector<int> &range,
+                           const QPoint &index)
+{
+    // TODO: replace `Solver::cross(const QVector<int> &, const QPoint &)`
+    //  by `iter::product`
+
+    // NOTE: `iter::product` generate incorrect positional args
+    /*
+    QVector<int> coords {index.x(), index.y()};
+
+    for (const auto&& [a, b] : iter::product(coords, range))
+    {
+        points.insert({a, b});
+    }
+    */
+
+    QSet<QPoint> points;
+
+    foreach(auto r, range)
+    {
+        points.insert({r, index.y()});
+        points.insert({index.x(), r});
+    }
+
+    return points;
 }
 
 QSet<int> Solver::variantsPerBlock(const QVector<int> &range,
