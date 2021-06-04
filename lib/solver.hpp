@@ -45,7 +45,7 @@ private:
     static QSet<QPoint> cross(const QVector<int> &range,
                               const QPoint &index);
 
-    QSet<int> variantsPerBlock(const QVector<int> &range, const Block &b);
+    QSet<int> variantsPerBlock(const QVector<int> &range, const Block *b);
 
 };
 

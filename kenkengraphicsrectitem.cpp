@@ -18,13 +18,13 @@ void KenkenGraphicsRectItem::paint(QPainter *painter,
     }
 }
 
-KenkenGraphicsRectItem::KenkenGraphicsRectItem(const Block &block, QGraphicsItem *parent)
+KenkenGraphicsRectItem::KenkenGraphicsRectItem(const Block *block, QGraphicsItem *parent)
     : QGraphicsPolygonItem(parent)
-    , _text(QString("%0 %1").arg(block.Total).arg(block.Op))
+    , _text(QString("%0 %1").arg(block->Total).arg(block->Op))
 {
     _font.setPointSize(20);
 
-    auto i = block.Indexes;
+    auto i = block->Indexes;
 
     auto rect = [&](const QPoint &p) -> QRect
     {

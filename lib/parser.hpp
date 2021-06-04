@@ -50,14 +50,14 @@ public:
     ~Parser() = default;
 
     void parse(QFile &);
-    Block parseLine(QString &);
+    Block *parseLine(QString &);
     int size();
 
 private:
      Q_REQUIRED_RESULT QVector<QPoint> parseIndexes(const QStringList &statements) const;
 
 public:
-    QVector<Block> Blocks;
+    QVector<QSharedPointer<Block>> Blocks;
 private:
     ParserOptions _options;
 

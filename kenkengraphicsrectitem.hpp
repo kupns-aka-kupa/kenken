@@ -17,7 +17,7 @@ class KenkenGraphicsRectItem : public QGraphicsPolygonItem
     QFont _font;
 public:
     KenkenGraphicsRectItem() = default;
-    explicit KenkenGraphicsRectItem(const Block &block,
+    explicit KenkenGraphicsRectItem(const Block *block,
                                     QGraphicsItem *parent = nullptr);
 
     void paint(QPainter *painter,

@@ -39,7 +39,7 @@ void MainWindow::on_loadPushButton_clicked()
 
     foreach(auto block, _parser->Blocks)
     {
-        _scene->addItem(new KenkenGraphicsRectItem(block));
+        _scene->addItem(new KenkenGraphicsRectItem(block.data()));
     }
 
 #ifdef QT_DEBUG
