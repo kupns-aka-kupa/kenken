@@ -7,29 +7,26 @@ QVector<QPair<QPoint, int>> Solver::solve()
     auto p = dynamic_cast<Parser *>(parent());
 
     QMultiHash<QPoint, QSharedPointer<Block>> groups;
+    QHash<QSharedPointer<Block>, QSet<int>> variants;
 
     QVector<int> range(p->size());
     std::iota(range.begin(), range.end(), 1);
 
     foreach(auto block, p->Blocks)
     {
-        auto variants = variantsPerBlock(range, block.data());
-
-        Q_UNUSED(variants)
+        variants.insert(block, variantsPerBlock(range, block.data()));
 
         foreach(const auto &index, block->Indexes)
         foreach(const auto &point, cross(range, index))
         groups.insert(point, block);
     }
 
+    qDebug() << variants;
 
     for (const auto&& [x, y] : iter::product<2>(range))
     {
-        QPoint point{x, y};
-        auto values = groups.values(point);
+        auto values = groups.values({x, y});
         values.erase(std::unique(values.begin(), values.end()), values.end());
-
-        qDebug() << point << values.size();
 
         foreach(auto value, values)
             qDebug() << *value;

@@ -1,3 +1,6 @@
 [submodule "itertools"]
 	path = itertools
 	url = https://github.com/ryanhaining/cppitertools.git
+[submodule "tests/comp"]
+	path = tests/comp
+	url = https://github.com/Ilya-Belyanov/KekKen-solve.git
