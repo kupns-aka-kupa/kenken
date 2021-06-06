@@ -11,10 +11,12 @@
 
 class KenkenGraphicsRectItem : public QGraphicsPolygonItem
 {
-    const int _size = 100;
     QVector<QRect> _cells;
     QString _text;
     QFont _font;
+public:
+    const static int Size = 100;
+
 public:
     KenkenGraphicsRectItem() = default;
     explicit KenkenGraphicsRectItem(const Block *block,

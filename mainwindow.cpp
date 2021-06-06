@@ -43,11 +43,22 @@ void MainWindow::on_loadPushButton_clicked()
     }
 
 #ifdef QT_DEBUG
-    _solver->solve();
+    on_solvePushButton_clicked();
 #endif
 }
 
 void MainWindow::on_solvePushButton_clicked()
 {
-    _solver->solve();
+    auto solution = _solver->solve();
+
+    QHashIterator<QPoint, int> i(solution);
+    while (i.hasNext())
+    {
+        i.next();
+
+        auto text = _scene->addText(QString::number(i.value()));
+        text->setPos(i.key() * KenkenGraphicsRectItem::Size);
+        text->setDefaultTextColor(Qt::black);
+        text->setScale(4);
+    }
 }

@@ -39,7 +39,7 @@ public:
     explicit Solver(Parser *parent = nullptr);
     ~Solver() = default;
 
-    QVector<QPair<QPoint, int>> solve();
+    QHash<QPoint, int> solve();
 
 private:
     static QSet<QPoint> cross(const QVector<int> &range,

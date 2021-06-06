@@ -2,7 +2,7 @@
 
 Solver::Solver(Parser *parent) : QObject(parent) { }
 
-QVector<QPair<QPoint, int>> Solver::solve()
+QHash<QPoint, int> Solver::solve()
 {
     auto p = dynamic_cast<Parser *>(parent());
 
@@ -21,11 +21,12 @@ QVector<QPair<QPoint, int>> Solver::solve()
         groups.insert(point, block);
     }
 
-    qDebug() << variants;
+    QHash<QPoint, int> solution;
 
     for (const auto&& [x, y] : iter::product<2>(range))
     {
-        auto values = groups.values({x, y});
+        QPoint point{x, y};
+        auto values = groups.values(point);
         values.erase(std::unique(values.begin(), values.end()), values.end());
 
         foreach(auto value, values)
@@ -33,7 +34,7 @@ QVector<QPair<QPoint, int>> Solver::solve()
 
     }
 
-    return QVector<QPair<QPoint, int>> ();
+    return solution;
 }
 
 QSet<QPoint> Solver::cross(const QVector<int> &range,

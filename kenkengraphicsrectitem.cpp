@@ -29,8 +29,8 @@ KenkenGraphicsRectItem::KenkenGraphicsRectItem(const Block *block, QGraphicsItem
     auto rect = [&](const QPoint &p) -> QRect
     {
         QRect r;
-        r.moveTo(p * _size);
-        r.setSize({_size, _size});
+        r.moveTo(p * Size);
+        r.setSize({Size, Size});
         return r;
     };
 
