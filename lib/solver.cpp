@@ -17,8 +17,8 @@ QHash<QPoint, int> Solver::solve()
         variants.insert(block, variantsPerBlock(range, block.data()));
 
         foreach(const auto &index, block->Indexes)
-        foreach(const auto &point, cross(range, index))
-        groups.insert(point, block);
+            foreach(const auto &point, cross(range, index))
+                groups.insert(point, block);
     }
 
     QHash<QPoint, int> solution;
@@ -29,9 +29,24 @@ QHash<QPoint, int> Solver::solve()
         auto values = groups.values(point);
         values.erase(std::unique(values.begin(), values.end()), values.end());
 
-        foreach(auto value, values)
+        foreach(const auto &value, values)
+        {
             qDebug() << *value;
+            foreach(const auto &index, value->Indexes)
+            {
+                auto &vars = variants[value];
 
+                if (!vars.empty())
+                {
+                    auto i = vars.begin();
+                    solution.insert(index, *i);
+
+                    qDebug() << *i;
+                    Q_ASSERT(vars.remove(*i));
+                    qDebug() << vars;
+                }
+            }
+        }
     }
 
     return solution;
