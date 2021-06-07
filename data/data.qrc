@@ -6,6 +6,15 @@
         <file>6668.txt</file>
         <file>7821.txt</file>
         <file>9813.txt</file>
+        <file>../tests/comp/tests/data/test_1(4x4).txt</file>
+        <file>../tests/comp/tests/data/test_2(3x3).txt</file>
+        <file>../tests/comp/tests/data/test_3(4x4).txt</file>
+        <file>../tests/comp/tests/data/test_4(5x5).txt</file>
+        <file>../tests/comp/tests/data/test_5(3x3).txt</file>
+        <file>../tests/comp/tests/data/test_6(3x3).txt</file>
+        <file>../tests/comp/tests/data/test_7(4x4).txt</file>
+        <file>../tests/comp/tests/data/test_8(4x4).txt</file>
+        <file>../tests/comp/tests/data/test_9(5x5).txt</file>
     </qresource>
     <qresource prefix="/invalid">
         <file>invalid.3134.txt</file>

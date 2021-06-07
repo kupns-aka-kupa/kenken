@@ -30,6 +30,7 @@ void Parser::parse(QFile &file)
         auto line = QString(file.readLine()).simplified();
         Blocks.push_back(QSharedPointer<Block>(parseLine(line)));
     }
+    file.close();
 }
 
 Block *Parser::parseLine(QString &line)

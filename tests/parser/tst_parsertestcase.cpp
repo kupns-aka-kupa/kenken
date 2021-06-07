@@ -1,6 +1,6 @@
 #include <QtTest>
 
-#include "../../lib/parser.hpp"
+#include "parser.hpp"
 
 class ParserTestCase : public QObject
 {
@@ -20,6 +20,8 @@ private slots:
     void validTestCase();
     void invalidTestCase_data();
     void invalidTestCase();
+    void fileTestCase_data();
+    void fileTestCase();
     void cleanupTestCase();
 };
 
@@ -57,11 +59,13 @@ void ParserTestCase::validTestCase()
     QString line;
     QTextStream stream(&_data);
 
-    while (stream.readLineInto(&line))
+    QBENCHMARK
     {
-        _parser->parseLine(line);
+        while (stream.readLineInto(&line))
+        {
+            _parser->parseLine(line);
+        }
     }
-
 }
 
 void ParserTestCase::invalidTestCase_data()
@@ -89,6 +93,31 @@ void ParserTestCase::invalidTestCase()
         _parser->parseLine(line);
     }, ParserException);
 
+}
+
+void ParserTestCase::fileTestCase_data()
+{
+    QTest::addColumn<QString>("data");
+
+    QDirIterator it(":valid", QDirIterator::Subdirectories);
+    while (it.hasNext())
+    {
+        QTest::newRow(it.fileName().toLocal8Bit()) << it.next();
+    }
+}
+
+void ParserTestCase::fileTestCase()
+{
+    QDir dir(":valid");
+
+    QFileInfo info(dir, _data);
+
+    QFile file(info.filePath());
+
+    QBENCHMARK
+    {
+        _parser->parse(file);
+    }
 }
 
 void ParserTestCase::cleanupTestCase() { }

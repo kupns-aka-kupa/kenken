@@ -32,6 +32,7 @@ class Solver : public QObject
         {'+', std::plus()},
         {'-', std::minus()},
         {'/', std::divides()},
+        {':', std::divides()},
         {'*', std::multiplies()},
     };
 
