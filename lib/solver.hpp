@@ -35,18 +35,19 @@ class Solver : public QObject
         {':', std::divides()},
         {'*', std::multiplies()},
     };
+    using Solution = QHash<QPoint, int>;
 
 public:
     explicit Solver(Parser *parent = nullptr);
     ~Solver() = default;
 
-    QHash<QPoint, int> solve();
+    Solution solve();
 
 private:
     static QSet<QPoint> cross(const QVector<int> &range,
                               const QPoint &index);
 
-    QSet<int> variantsPerBlock(const QVector<int> &range, const Block *b);
+    QSet<int> variantsPerBlock(const QVector<int> &range, const Block *b, Solution &solution);
 
 };
 

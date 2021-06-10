@@ -2,62 +2,55 @@
 
 Solver::Solver(Parser *parent) : QObject(parent) { }
 
-QHash<QPoint, int> Solver::solve()
+Solver::Solution Solver::solve()
 {
+    using Variants = QHash<QSharedPointer<Block>, QSet<int>>;
+    using Groups = QHash<QPoint, QSharedPointer<Block>>;
+
     auto p = dynamic_cast<Parser *>(parent());
 
-    QMultiHash<QPoint, QSharedPointer<Block>> groups;
-    QHash<QSharedPointer<Block>, QSet<int>> variants;
+    Groups groups;
+    Variants variants;
+    Solution solution;
 
     QVector<int> range(p->size());
     std::iota(range.begin(), range.end(), 1);
 
     foreach(auto block, p->Blocks)
     {
-        variants.insert(block, variantsPerBlock(range, block.data()));
+        variants.insert(block, variantsPerBlock(range, block.data(), solution));
 
+#ifdef USESTD
+        std::for_each(std::cbegin(block->Indexes),
+                      std::cend(block->Indexes),
+                      std::bind(&Groups::insert, std::ref(groups),
+                                std::placeholders::_1, block));
+#else
         foreach(const auto &index, block->Indexes)
-            foreach(const auto &point, cross(range, index))
-                groups.insert(point, block);
+            groups.insert(index, block);
+#endif
     }
-
-    QHash<QPoint, int> solution;
 
     for (const auto&& [x, y] : iter::product<2>(range))
     {
         QPoint point{x, y};
-        auto values = groups.values(point);
-        values.erase(std::unique(values.begin(), values.end()), values.end());
 
-        foreach(const auto &value, values)
+        qDebug() << point;
+        foreach(const auto &item, cross(range, point))
         {
-            qDebug() << *value;
-            foreach(const auto &index, value->Indexes)
-            {
-                auto &vars = variants[value];
+            qDebug() << item << variants.value(groups.value(item));
 
-                if (!vars.empty())
-                {
-                    auto i = vars.begin();
-                    solution.insert(index, *i);
-
-                    qDebug() << *i;
-                    Q_ASSERT(vars.remove(*i));
-                    qDebug() << vars;
-                }
-            }
         }
+        qDebug() << endl;
     }
 
     return solution;
 }
 
 QSet<QPoint> Solver::cross(const QVector<int> &range,
-                           const QPoint &index)
+                           const QPoint &index
+                           )
 {
-    // TODO: replace `Solver::cross(const QVector<int> &, const QPoint &)`
-    //  by `iter::product`
-
     // NOTE: `iter::product` generate incorrect positional args
     /*
     QVector<int> coords {index.x(), index.y()};
@@ -80,30 +73,32 @@ QSet<QPoint> Solver::cross(const QVector<int> &range,
 }
 
 QSet<int> Solver::variantsPerBlock(const QVector<int> &range,
-                                   const Block *b)
+                                   const Block *b,
+                                   Solution &solution)
 {
+    if(!Ops.contains(b->Op))
+    {
+        Q_ASSERT(b->Indexes.count() < 2);
+
+        solution.insert(b->Indexes.first(), b->Total);
+        return QSet<int>();
+    }
+
     QSet<int> combinations;
 
     for (auto&& i : iter::combinations(range, 2))
     {
-        try
+        auto l = *i.rbegin();
+        auto r = *i.begin();
+
+        Q_ASSERT(l > r);
+
+        auto v = std::invoke(Ops[b->Op], l, r);
+
+        if (v == b->Total)
         {
-            auto l = *i.rbegin();
-            auto r = *i.begin();
-
-            Q_ASSERT(l > r);
-
-            auto v = std::invoke(Ops[b->Op], l, r);
-
-            if (v == b->Total)
-            {
-                combinations += {l, r};
-                qDebug("%d %c %d = %d", l, b->Op, r, v);
-            }
-        }
-        catch(const std::bad_function_call& e)
-        {
-            combinations.insert(b->Total);
+            combinations += {l, r};
+            qDebug("%d %c %d = %d", l, b->Op, r, v);
         }
     }
 

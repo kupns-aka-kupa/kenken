@@ -6,6 +6,8 @@
         <file>6668.txt</file>
         <file>7821.txt</file>
         <file>9813.txt</file>
+    </qresource>
+    <qresource prefix="/comp">
         <file>../tests/comp/tests/data/test_1(4x4).txt</file>
         <file>../tests/comp/tests/data/test_2(3x3).txt</file>
         <file>../tests/comp/tests/data/test_3(4x4).txt</file>

@@ -18,7 +18,7 @@ private slots:
     void initTestCase_data();
     void initTestCase();
     void init();
-    void kupnsTestCase();
+    void solveTestCase();
     void cleanupTestCase();
 };
 
@@ -49,7 +49,7 @@ void SolverTestCase::init()
     _fileName = fileName;
 }
 
-void SolverTestCase::kupnsTestCase()
+void SolverTestCase::solveTestCase()
 {
     QDir dir(":valid");
 
