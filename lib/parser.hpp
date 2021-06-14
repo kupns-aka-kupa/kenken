@@ -51,7 +51,7 @@ public:
 
     void parse(QFile &);
     Block *parseLine(QString &);
-    int size();
+    int size() const;
 
 private:
      Q_REQUIRED_RESULT QVector<QPoint> parseIndexes(const QStringList &statements) const;

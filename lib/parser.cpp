@@ -15,7 +15,7 @@ QDebug operator<<(QDebug dbg, const Block &block)
     if (block.Indexes.isEmpty())
         dbg.nospace() << "Block() ";
     else
-        dbg.nospace() << "Block(" << block.Indexes << ") ";
+        dbg.nospace() << "Block(" << block.Total << ", " << QString(block.Op) << ") ";
     return dbg.maybeSpace();
 }
 
@@ -73,7 +73,7 @@ QVector<QPoint> Parser::parseIndexes(const QStringList &statements) const
     return std::move(indexes);
 }
 
-int Parser::size()
+int Parser::size() const
 {
     QSet<int> i;
 

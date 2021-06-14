@@ -18,7 +18,7 @@ Solver::Solution Solver::solve()
 
     foreach(auto block, p->Blocks)
     {
-        variants.insert(block, variantsPerBlock(range, block.data(), solution));
+        variants.insert(block, variantsPerBlock(range, block.data()));
 
 #ifdef USESTD
         std::for_each(std::cbegin(block->Indexes),
@@ -31,74 +31,58 @@ Solver::Solution Solver::solve()
 #endif
     }
 
+    QHashIterator<QSharedPointer<Block>, QSet<int>> it(variants);
+    while (it.hasNext())
+    {
+        it.next();
+        qDebug() << *it.key() << ": " << it.value();
+    }
     for (const auto&& [x, y] : iter::product<2>(range))
     {
         QPoint point{x, y};
+        auto current = variants.value(groups.value(point));
 
         qDebug() << point;
-        foreach(const auto &item, cross(range, point))
+        QSet<int> v;
+        for (int i = 1; i < range.size() + 1; ++i)
         {
-            qDebug() << item << variants.value(groups.value(item));
-
+            QPoint item{i, y};
+            v |= variants.value(groups.value(item));
+            qDebug() << item << v;
         }
-        qDebug() << endl;
+
+        qDebug() << current << v - current << Qt::endl;
     }
 
     return solution;
 }
 
-QSet<QPoint> Solver::cross(const QVector<int> &range,
-                           const QPoint &index
-                           )
-{
-    // NOTE: `iter::product` generate incorrect positional args
-    /*
-    QVector<int> coords {index.x(), index.y()};
-
-    for (const auto&& [a, b] : iter::product(coords, range))
-    {
-        points.insert({a, b});
-    }
-    */
-
-    QSet<QPoint> points;
-
-    foreach(auto r, range)
-    {
-        points.insert({r, index.y()});
-        points.insert({index.x(), r});
-    }
-
-    return points;
-}
-
 QSet<int> Solver::variantsPerBlock(const QVector<int> &range,
-                                   const Block *b,
-                                   Solution &solution)
+                                   const Block *b)
 {
     if(!Ops.contains(b->Op))
     {
         Q_ASSERT(b->Indexes.count() < 2);
 
-        solution.insert(b->Indexes.first(), b->Total);
-        return QSet<int>();
+        return {b->Total};
     }
 
     QSet<int> combinations;
 
-    for (auto&& i : iter::combinations(range, 2))
+    for (auto&& i : iter::combinations(range, b->Indexes.size()))
     {
-        auto l = *i.rbegin();
-        auto r = *i.begin();
+        Q_ASSERT(std::is_sorted(i.begin(), i.end()));
+        Q_ASSERT(std::distance(i.begin(), i.end()) == b->Indexes.size());
 
-        Q_ASSERT(l > r);
-
-        auto v = std::invoke(Ops[b->Op], l, r);
+        auto v = std::accumulate(std::next(i.rbegin()),
+                                 i.rend(),
+                                 *i.rbegin(),
+                                 Ops[b->Op]);
 
         if (v == b->Total)
         {
-            combinations += {l, r};
-            qDebug("%d %c %d = %d", l, b->Op, r, v);
+            combinations += {i.begin(), i.end()};
+            qDebug() << QVector<int>(i.begin(), i.end()) << b->Op << v;
         }
     }
 
